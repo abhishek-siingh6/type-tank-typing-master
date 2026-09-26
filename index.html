@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TYPE//TANK</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="crt-overlay" class="crt-overlay"></div>
+  <div id="app-wrapper">
+    <div id="app-container" class="aspect-auto">
+      <header id="main-header" class="hidden">
+        <div class="header-left">
+          <span id="hud-callsign">OP: UNKNOWN</span>
+        </div>
+        <div class="header-right">
+          <button id="btn-callsign">[SWITCH CALLSIGN]</button>
+          <button id="btn-aspect">[ASPECT: AUTO]</button>
+          <button id="btn-audio">[AUDIO: ON]</button>
+          <button id="btn-crt">[CRT: ON]</button>
+        </div>
+      </header>
+
+      <!-- SCREEN: LOGIN -->
+      <section id="screen-login" class="screen active">
+        <div class="container-center">
+          <h1>TYPE//TANK</h1>
+          <div class="dos-box">
+            <p>OPERATOR AUTHENTICATION REQUIRED</p>
+            <div class="input-line">
+              <span>CALLSIGN> </span>
+              <input type="text" id="input-callsign" autocomplete="off" spellcheck="false" maxlength="12">
+            </div>
+            <p class="blink hint">PRESS ENTER TO CONFIRM</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCREEN: SETTINGS -->
+      <section id="screen-settings" class="screen hidden">
+        <div class="container-full">
+          <h2>+---[ ARSENAL & DISPLAY CONFIG ]---+</h2>
+          
+          <div class="mode-grid">
+            <div class="mode-card" data-mode="1" tabindex="0">
+              <h3>MODE 1 [ALPHA]</h3>
+              <p>Lowercase (tank, radar, artillery)</p>
+            </div>
+            <div class="mode-card" data-mode="2" tabindex="0">
+              <h3>MODE 2 [BRAVO]</h3>
+              <p>Lowercase + Uppercase</p>
+            </div>
+            <div class="mode-card" data-mode="3" tabindex="0">
+              <h3>MODE 3 [CHARLIE]</h3>
+              <p>Letters + Numbers</p>
+            </div>
+            <div class="mode-card" data-mode="4" tabindex="0">
+              <h3>MODE 4 [DELTA]</h3>
+              <p>All Characters & Math</p>
+            </div>
+          </div>
+          
+          <div class="preview-bar">
+            <span>PREVIEW> <span id="mode-preview">tank, radar, artillery</span></span>
+          </div>
+
+          <p class="hint blink" style="text-align:center; margin-top: 10px;">PRESS SPACE OR ENTER TO ADVANCE</p>
+        </div>
+      </section>
+
+      <!-- SCREEN: INSTRUCTIONS -->
+      <section id="screen-instructions" class="screen hidden">
+        <div class="container-full">
+          <h2>+---[ TACTICAL BRIEFING ]---+</h2>
+          <div class="briefing-grid">
+            <div class="briefing-col">
+              <h3>[ THREAT ANALYSIS ]</h3>
+              <p>> Hostile Words Fall from Top.</p>
+              <p>> Type characters to fire and lock-on.</p>
+              <p>> <span class="text-red">RED TARGETS</span>: 3.5x Multiplier, faster.</p>
+              <p>> Missed targets damage hull integrity.</p>
+            </div>
+            <div class="briefing-col">
+              <h3>[ TURRET DYNAMICS ]</h3>
+              <p>> Auto-targets lowest matching word.</p>
+              <p>> Cannon rotates 180 deg to target.</p>
+              <p>> Tracers and impacts per keystroke.</p>
+              <p>> 0% Hull Integrity = SORTIE TERMINATED.</p>
+            </div>
+          </div>
+          <p class="hint blink" style="text-align:center; margin-top: 20px;">PRESS SPACEBAR OR ENTER TO ENGAGE</p>
+        </div>
+      </section>
+
+      <!-- SCREEN: GAME -->
+      <section id="screen-game" class="screen hidden">
+        <div id="game-hud">
+          <div class="hud-item">SCORE: <span id="hud-score">000000</span></div>
+          <div class="hud-item">COMBO: x<span id="hud-combo">1</span></div>
+          <div class="hud-item">WPM: <span id="hud-wpm">0</span></div>
+          <div class="hud-item">ACC: <span id="hud-acc">100</span>%</div>
+          <div class="hud-item hull-bar">HULL: <div class="hull-fill" id="hud-hull-fill"></div></div>
+        </div>
+        <div id="canvas-container">
+          <canvas id="game-canvas"></canvas>
+        </div>
+      </section>
+
+      <!-- SCREEN: RESULT -->
+      <section id="screen-result" class="screen hidden">
+        <div class="container-center">
+          <h2>+---[ SORTIE DEBRIEF ]---+</h2>
+          <div id="new-record-banner" class="hidden">★ NEW RECORD! ★</div>
+          <div class="stats-grid">
+            <div>MODE: <span id="res-mode"></span></div>
+            <div>FINAL SCORE: <span id="res-score"></span></div>
+            <div>AVG WPM: <span id="res-wpm"></span></div>
+            <div>ACCURACY: <span id="res-acc"></span>%</div>
+            <div>WORDS: <span id="res-words"></span></div>
+            <div>MAX COMBO: <span id="res-combo"></span></div>
+          </div>
+          <div id="pb-compare" style="margin-top: 15px; color: var(--color-amber);"></div>
+          <p class="hint blink" style="text-align:center; margin-top: 20px;">[ENTER / SPACE] TO PLAY AGAIN | [R] FOR MY RECORDS | [ESC] TO SETTINGS</p>
+        </div>
+      </section>
+
+      <!-- SCREEN: RECORDS -->
+      <section id="screen-records" class="screen hidden">
+        <div class="container-full">
+          <h2>+---[ FLIGHT LOGS ]---+</h2>
+          <div class="records-overview" id="records-overview">
+            <!-- Populated by JS -->
+          </div>
+          <div class="records-table-container">
+            <table class="dos-table" id="records-table">
+              <thead>
+                <tr>
+                  <th>DATE</th><th>MODE</th><th>SCORE</th><th>WPM</th><th>ACC</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Populated by JS -->
+              </tbody>
+            </table>
+          </div>
+          <div style="text-align: center; margin-top: 10px;">
+            <button id="btn-purge">[PURGE LOGS]</button>
+            <p class="hint blink" style="text-align:center; margin-top: 10px;">PRESS ESC TO RETURN</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+  
+  <script src="js/words.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
